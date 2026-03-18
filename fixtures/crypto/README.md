@@ -1,12 +1,23 @@
-# Crypto Fixtures
+# Crypto Fixture Schema
 
-This directory is reserved for deterministic cross-implementation encryption and decryption vectors.
+PACT crypto fixtures provide deterministic wire-level examples shared across implementations.
 
-Planned fixture categories:
+Each fixture file contains:
 
-- passphrase + multipart
-- passphrase + packed
-- raw key + packed
-- packed payloads with outbound character remapping
+- `name`
+- `configString`
+- `secret`
+- `plaintext`
+- `ciphertext`
+- `deterministicInputs`
 
-Current conformance work is focused on config parsing, normalization, and canonical string handling. Deterministic crypto vectors are the next planned step.
+`deterministicInputs` contains:
+
+- `ivBase64Url`
+- optional `saltBase64Url`
+
+Conformance expectations:
+
+- decrypting `ciphertext` with `configString` and `secret` yields `plaintext`
+- a deterministic encrypt operation using the provided IV and optional salt yields exactly `ciphertext`
+- the implementation should recognize `ciphertext` as a valid encrypted payload for that config

@@ -1,0 +1,10 @@
+{
+  "name": "raw-packed-dotbang",
+  "configString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoiW0VOQ10iLCJrZXlIYW5kbGluZyI6InJhdy1iYXNlNjQta2V5IiwicGF5bG9hZExheW91dCI6InBhY2tlZCIsInBhY2tlZEVuY29kaW5nIjoiZG90LWJhbmctYmFzZTY0LW5vLXBhZGRpbmciLCJjcnlwdG8iOnsiYWxnb3JpdGhtIjoiYWVzLTI1Ni1nY20iLCJpdkJ5dGVzIjoxMiwidGFnQml0cyI6MTI4fX0",
+  "secret": "AAAAAAAAAAAAAAAAAAAAAA==",
+  "plaintext": "Testing123",
+  "ciphertext": "[ENC]CgsMDQ4PGhscHR4f7sJzrvwlZ.EesoE6DdfGfqZEu.WXu2dh8FU",
+  "deterministicInputs": {
+    "ivBase64Url": "CgsMDQ4PGhscHR4f"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "passphrase-packed",
+  "configString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDEiLCJrZXlIYW5kbGluZyI6InBhc3NwaHJhc2UtcGJrZGYyIiwicGF5bG9hZExheW91dCI6InBhY2tlZCIsInBhY2tlZEVuY29kaW5nIjoiYmFzZTY0dXJsLW5vLXBhZGRpbmcifQ",
+  "secret": "shared secret",
+  "plaintext": "hello world",
+  "ciphertext": "pact1ABEiM0RVZneImaq7zN3u_xAgMEBQYHABAgMEBaRb11bx8TyImBqsKULn4bgh6h_elFIbSvHyOw",
+  "deterministicInputs": {
+    "saltBase64Url": "ABEiM0RVZneImaq7zN3u_w",
+    "ivBase64Url": "ECAwQFBgcAECAwQF"
+  }
+}
