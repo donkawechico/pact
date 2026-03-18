@@ -5,5 +5,6 @@
     "payloadLayout": "packed",
     "packedEncoding": "base64url-no-padding"
   },
+  "expectedErrorContains": "Missing required field: keyHandling",
   "notes": "Invalid because keyHandling is missing."
 }

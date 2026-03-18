@@ -2,6 +2,7 @@
 
 ## Unreleased
 
-- Initial repository scaffold.
-- Added first public draft of the PACT v1 specification.
-- Added starter config and crypto fixture directories.
+- Added documented config conformance fixture schema.
+- Added canonical valid and invalid config fixtures for PACT v1.
+- Expanded the spec with canonical serialization and fixture guidance.
+- Clarified the intended split between the spec repo and implementation repos.

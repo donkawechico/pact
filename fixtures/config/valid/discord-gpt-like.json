@@ -11,5 +11,23 @@
       "tagBits": 128
     }
   },
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoiW0VOQ10iLCJrZXlIYW5kbGluZyI6InJhdy1iYXNlNjQta2V5IiwicGF5bG9hZExheW91dCI6InBhY2tlZCIsInBhY2tlZEVuY29kaW5nIjoiZG90LWJhbmctYmFzZTY0LW5vLXBhZGRpbmciLCJjcnlwdG8iOnsiYWxnb3JpdGhtIjoiYWVzLTI1Ni1nY20iLCJpdkJ5dGVzIjoxMiwidGFnQml0cyI6MTI4fX0",
+  "expectedNormalized": {
+    "messagePrefix": "[ENC]",
+    "keyHandling": "RAW_BASE64_KEY",
+    "payloadLayout": "PACKED",
+    "multipartSeparator": ":",
+    "packedEncoding": "STANDARD_NO_PADDING",
+    "charRemap": {
+      "+": ".",
+      "/": "!"
+    },
+    "crypto": {
+      "algorithm": "aes-256-gcm",
+      "ivBytes": 12,
+      "tagBits": 128,
+      "kdf": null
+    }
+  },
   "notes": "Packed raw-key profile with dot/bang remap semantics."
 }

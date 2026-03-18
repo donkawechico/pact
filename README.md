@@ -24,6 +24,14 @@ PACT is a protocol and configuration spec for sharing application-layer encrypti
 - `examples/`: human-readable usage examples.
 - `CHANGELOG.md`: spec evolution notes.
 
+## Implementation Model
+
+The intended project shape is:
+
+- `pact`: the language-neutral spec and fixture repo
+- `pact-kotlin`: a Kotlin/JVM reference implementation
+- future implementations such as `pact-python` or `pact-js` consuming the same fixtures
+
 ## Status
 
-PACT is currently an early public draft. The intent is to stabilize `PACT v1`, publish fixtures, and then support multiple independent implementations.
+PACT is currently an early public draft. The intent is to stabilize `PACT v1`, publish conformance fixtures, and then support multiple independent implementations.

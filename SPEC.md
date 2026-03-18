@@ -140,7 +140,41 @@ PACT parsers MUST:
 - ignore unknown top-level fields within a known version
 - preserve unknown fields when feasible during parse/serialize round-trips
 
-## 10. Example
+## 10. Canonical Serialization Notes
+
+PACT v1 implementations SHOULD emit canonical strings using:
+
+- the `pact:v1:` wrapper
+- unpadded Base64URL for the outer body encoding
+- the spec enum spellings from this document
+- `dot-bang-base64-no-padding` when standard Base64 encoding is paired with the exact remap `{"+":".","/":"!"}`
+
+## 11. Conformance Fixtures
+
+The `fixtures/` directory is the machine-readable conformance contract for independent implementations.
+
+### 11.1 Config fixtures
+
+`fixtures/config/valid/*.json` contain:
+
+- `name`
+- `json`: a decoded PACT JSON body
+- `canonicalString`: the expected canonical `pact:v1:...` string
+- `expectedNormalized`: the normalized runtime interpretation
+
+`fixtures/config/invalid/*.json` contain:
+
+- `name`
+- either `json` or `pactString`
+- `expectedErrorContains`
+
+Implementations SHOULD run these fixtures in automated tests.
+
+### 11.2 Crypto fixtures
+
+`fixtures/crypto/` is reserved for deterministic encryption and decryption vectors shared across implementations.
+
+## 12. Example
 
 Decoded JSON:
 

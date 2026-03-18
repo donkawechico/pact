@@ -6,5 +6,24 @@
     "payloadLayout": "multipart",
     "multipartSeparator": ":"
   },
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoiZW5jMToiLCJrZXlIYW5kbGluZyI6InBhc3NwaHJhc2UtcGJrZGYyIiwicGF5bG9hZExheW91dCI6Im11bHRpcGFydCIsIm11bHRpcGFydFNlcGFyYXRvciI6IjoifQ",
+  "expectedNormalized": {
+    "messagePrefix": "enc1:",
+    "keyHandling": "PASSPHRASE_PBKDF2",
+    "payloadLayout": "MULTIPART",
+    "multipartSeparator": ":",
+    "packedEncoding": "URL_SAFE_NO_PADDING",
+    "charRemap": {},
+    "crypto": {
+      "algorithm": "aes-256-gcm",
+      "ivBytes": 12,
+      "tagBits": 128,
+      "kdf": {
+        "type": "pbkdf2-hmac-sha256",
+        "iterations": 120000,
+        "saltBytes": 16
+      }
+    }
+  },
   "notes": "Smallest valid multipart profile."
 }
