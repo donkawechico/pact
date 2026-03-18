@@ -1,0 +1,10 @@
+{
+  "name": "minimal-v1",
+  "json": {
+    "messagePrefix": "enc1:",
+    "keyHandling": "passphrase-pbkdf2",
+    "payloadLayout": "multipart",
+    "multipartSeparator": ":"
+  },
+  "notes": "Smallest valid multipart profile."
+}

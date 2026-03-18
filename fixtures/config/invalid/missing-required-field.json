@@ -1,0 +1,9 @@
+{
+  "name": "missing-required-field",
+  "json": {
+    "messagePrefix": "enc1:",
+    "payloadLayout": "packed",
+    "packedEncoding": "base64url-no-padding"
+  },
+  "notes": "Invalid because keyHandling is missing."
+}
