@@ -11,11 +11,10 @@ Required fields:
 - `canonicalString`
 - `expectedNormalized`
 
-`expectedNormalized` uses implementation-facing enum names for easier automated assertions:
+`expectedNormalized` uses implementation-facing normalized names for easier automated assertions:
 
-- `keyHandling`: `PASSPHRASE_PBKDF2` or `RAW_BASE64_KEY`
-- `payloadLayout`: `MULTIPART` or `PACKED`
-- `packedEncoding`: `URL_SAFE_NO_PADDING` or `STANDARD_NO_PADDING`
+- `profile`: `PACT_PSK1` or `PACT_BOX1`
+- `profileData`: normalized profile-specific public parameters
 
 ## Invalid fixtures
 

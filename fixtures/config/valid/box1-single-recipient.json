@@ -1,0 +1,29 @@
+{
+  "name": "box1-single-recipient",
+  "json": {
+    "messagePrefix": "pact1:",
+    "profile": "pact-box1",
+    "profileData": {
+      "recipients": [
+        {
+          "keyId": "alice-main",
+          "publicKey": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY"
+        }
+      ]
+    }
+  },
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtYm94MSIsInByb2ZpbGVEYXRhIjp7InJlY2lwaWVudHMiOlt7ImtleUlkIjoiYWxpY2UtbWFpbiIsInB1YmxpY0tleSI6Ik1ERXlNelExTmpjNE9XRmlZMlJsWmpBeE1qTTBOVFkzT0RsaFltTmtaV1kifV19fQ",
+  "expectedNormalized": {
+    "messagePrefix": "pact1:",
+    "profile": "PACT_BOX1",
+    "profileData": {
+      "recipients": [
+        {
+          "keyId": "alice-main",
+          "publicKey": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY"
+        }
+      ]
+    }
+  },
+  "notes": "Minimal public-key recipient config for direct encryption."
+}

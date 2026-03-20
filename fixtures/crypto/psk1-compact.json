@@ -1,0 +1,10 @@
+{
+  "name": "psk1-compact",
+  "configString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtcHNrMSJ9",
+  "secret": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+  "plaintext": "Testing123",
+  "ciphertext": "pact1:!!*-'\"9eu7#RLhG'5+.[XG`o)^N+j[qlD?aJ(8HON//-!$b6",
+  "deterministicInputs": {
+    "ivBase64Url": "AAECAwQFBgcICQoL"
+  }
+}

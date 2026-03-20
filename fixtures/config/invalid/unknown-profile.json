@@ -1,0 +1,9 @@
+{
+  "name": "unknown-profile",
+  "json": {
+    "messagePrefix": "pact1:",
+    "profile": "pact-custom1"
+  },
+  "expectedErrorContains": "Unknown profile: pact-custom1",
+  "notes": "Invalid because pact:v1 only recognizes the stock profile registry."
+}

@@ -1,0 +1,10 @@
+{
+  "name": "box1-missing-recipients",
+  "json": {
+    "messagePrefix": "pact1:",
+    "profile": "pact-box1",
+    "profileData": {}
+  },
+  "expectedErrorContains": "Missing required profile field: profileData.recipients",
+  "notes": "Invalid because pact-box1 requires at least one recipient."
+}

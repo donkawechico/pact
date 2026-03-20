@@ -1,0 +1,37 @@
+{
+  "name": "box1-group",
+  "json": {
+    "messagePrefix": "pact1:",
+    "profile": "pact-box1",
+    "profileData": {
+      "recipients": [
+        {
+          "keyId": "alice-main",
+          "publicKey": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY"
+        },
+        {
+          "keyId": "bob-main",
+          "publicKey": "YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODk"
+        }
+      ]
+    }
+  },
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtYm94MSIsInByb2ZpbGVEYXRhIjp7InJlY2lwaWVudHMiOlt7ImtleUlkIjoiYWxpY2UtbWFpbiIsInB1YmxpY0tleSI6Ik1ERXlNelExTmpjNE9XRmlZMlJsWmpBeE1qTTBOVFkzT0RsaFltTmtaV1kifSx7ImtleUlkIjoiYm9iLW1haW4iLCJwdWJsaWNLZXkiOiJZV0pqWkdWbU1ERXlNelExTmpjNE9XRmlZMlJsWmpBeE1qTTBOVFkzT0RrIn1dfX0",
+  "expectedNormalized": {
+    "messagePrefix": "pact1:",
+    "profile": "PACT_BOX1",
+    "profileData": {
+      "recipients": [
+        {
+          "keyId": "alice-main",
+          "publicKey": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY"
+        },
+        {
+          "keyId": "bob-main",
+          "publicKey": "YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODk"
+        }
+      ]
+    }
+  },
+  "notes": "Group-capable public-key recipient config with multiple recipients."
+}

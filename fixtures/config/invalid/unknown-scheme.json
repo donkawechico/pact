@@ -1,6 +1,6 @@
 {
   "name": "unknown-scheme",
-  "pactString": "encfg:v1:eyJtZXNzYWdlUHJlZml4IjoiZW5jMToiLCJrZXlIYW5kbGluZyI6InBhc3NwaHJhc2UtcGJrZGYyIiwicGF5bG9hZExheW91dCI6Im11bHRpcGFydCIsIm11bHRpcGFydFNlcGFyYXRvciI6IjoifQ",
+  "pactString": "encfg:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtcHNrMSJ9",
   "expectedErrorContains": "Config string must start with pact:v1:",
   "notes": "Invalid because the wrapper scheme is not pact."
 }

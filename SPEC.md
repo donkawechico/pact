@@ -4,27 +4,35 @@ PACT stands for **Portable Application-layer Cryptography Template**.
 
 ## 1. Purpose
 
-PACT defines a portable configuration template for interoperable application-layer cryptography over host applications that are not natively aware of the encryption protocol in use.
+PACT v1 defines a portable, shareable configuration string for interoperable application-layer cryptography over host applications that are not natively aware of the encrypted content.
 
-A PACT template describes:
+PACT v1 is **profile-first**:
 
-- message prefixing
-- key handling mode
-- payload layout
-- payload encoding
-- optional character remapping
-- optional cryptographic metadata
+- a PACT string identifies a **named protocol profile**
+- a profile pins a concrete interoperability contract
+- a config string may carry only the **non-secret public parameters** that profile needs
 
-PACT templates MUST NOT contain secret key material.
+PACT strings MUST NOT contain secret key material.
 
-## 2. Terminology
+## 2. Design Model
+
+PACT intentionally separates:
+
+- **profile selection**: which interoperable cryptographic contract is in use
+- **public configuration**: non-secret data needed by that contract
+- **secret material**: passphrases, symmetric keys, private keys, or tokens exchanged out of band
+
+PACT v1 does **not** standardize UI, trust establishment, or transport security.
+
+## 3. Terminology
 
 - **Host application**: the app through which encrypted payloads are sent.
-- **PACT-compatible application**: an app that can parse or emit PACT templates.
-- **Template**: a structured, shareable protocol description.
-- **Runtime config**: the normalized executable interpretation of a PACT template.
+- **PACT-compatible application**: an app that can parse or emit PACT config strings.
+- **Profile**: a named, fixed interoperability contract.
+- **Profile data**: non-secret public configuration required by a specific profile.
+- **Runtime config**: the normalized executable interpretation of a PACT string.
 
-## 3. Canonical String Format
+## 4. Canonical String Format
 
 PACT v1 strings use the following wrapper:
 
@@ -32,105 +40,105 @@ PACT v1 strings use the following wrapper:
 
 Where:
 
-- `pact` is the fixed scheme tag.
-- `v1` is the protocol version.
-- `<base64url(json)>` is an unpadded Base64URL-encoded UTF-8 JSON object.
+- `pact` is the fixed scheme tag
+- `v1` is the protocol version
+- `<base64url(json)>` is an unpadded Base64URL-encoded UTF-8 JSON object
 
 Implementations MUST reject strings with an unknown scheme or version.
 
-## 4. JSON Body
+## 5. JSON Body
 
 The decoded JSON object MAY contain unknown fields. Unknown fields MUST be ignored by parsers that do not understand them.
 
-### 4.1 Required fields
+### 5.1 Required fields
 
 - `messagePrefix`: string
-- `keyHandling`: string enum
-- `payloadLayout`: string enum
+- `profile`: string enum
 
-### 4.2 Optional fields
+### 5.2 Optional fields
 
-- `multipartSeparator`: string
-- `packedEncoding`: string enum
-- `charRemap`: object mapping one-character strings to one-character strings
-- `crypto`: object
+- `profileData`: object
 
-### 4.3 Enumerations
+### 5.3 Standard profile names
 
-#### `keyHandling`
+- `pact-psk1`
+- `pact-box1`
 
-- `passphrase-pbkdf2`
-- `raw-base64-key`
+Implementations MUST reject unknown `profile` values.
 
-#### `payloadLayout`
+## 6. Standard Profiles
 
-- `multipart`
-- `packed`
+### 6.1 `pact-psk1`
 
-#### `packedEncoding`
+`pact-psk1` is the shared-secret profile.
 
-- `base64url-no-padding`
-- `base64-standard-no-padding`
-- `dot-bang-base64-no-padding`
+Intended use:
 
-`dot-bang-base64-no-padding` is equivalent to standard Base64 without padding plus the outbound remap `{"+":".","/":"!"}`.
+- pairwise messaging where both sides already share a secret
+- group messaging where multiple recipients share the same secret
+- compact local-first encryption overlays
 
-## 5. Cryptographic Metadata
+Security model:
 
-The `crypto` object is optional and reserved for executable cryptographic details.
+- one symmetric secret is shared out of band
+- every holder of that secret can decrypt the same message
 
-Known `crypto` fields in v1:
+`pact-psk1` does not require `profileData`.
+If `profileData` is present, it MUST be an empty object.
 
-- `algorithm`: string, for example `aes-256-gcm`
-- `ivBytes`: integer
-- `tagBits`: integer
-- `kdf`: object
+### 6.2 `pact-box1`
 
-Known `kdf` fields in v1:
+`pact-box1` is the recipient-public-key envelope profile.
 
-- `type`: string, for example `pbkdf2-hmac-sha256`
-- `iterations`: integer
-- `saltBytes`: integer
+Intended use:
 
-Unknown `crypto` and `kdf` fields MUST be preserved when possible during round-trip serialization.
+- direct 1:1 encryption using recipient public keys
+- small-group messaging where one message is decryptable by multiple recipients
 
-## 6. Secret Handling
+Security model:
+
+- the sender encrypts one message for one or more recipients
+- each recipient is described by non-secret public key material in the config
+
+`pact-box1` requires `profileData.recipients`.
+
+`profileData.recipients` MUST be a non-empty array of recipient objects.
+
+Each recipient object MUST contain:
+
+- `keyId`: string
+- `publicKey`: string
+
+`keyId` is an application-level recipient identifier.
+`publicKey` is the profile-defined textual public-key representation.
+
+Unknown recipient object fields MAY be preserved by implementations when feasible.
+
+## 7. Secret Handling
 
 PACT strings MUST NOT embed:
 
 - passphrases
-- raw AES keys
+- raw symmetric keys
 - private keys
 - tokens
 - any other secret material
 
 Secret exchange is explicitly out of scope.
 
-## 7. Character Remapping
-
-If `charRemap` is present, it defines an outbound character substitution map applied after encoding.
-
-Decoders MUST invert that map when decoding inbound ciphertext.
-
-Example:
-
-```json
-{
-  "+": ".",
-  "/": "!"
-}
-```
-
 ## 8. Validation Rules
 
-Implementations MUST reject templates when:
+Implementations MUST reject configs when:
 
 - required fields are missing
 - required fields are of the wrong type
-- enum values are unknown
-- `charRemap` keys or values are not one character long
-- `payloadLayout` is `multipart` and `multipartSeparator` is absent
-- `payloadLayout` is `packed` and `packedEncoding` is absent
+- `profile` is unknown
+- `profileData` is present but is not an object
+- `profile` is `pact-psk1` and `profileData` is non-empty
+- `profile` is `pact-box1` and `profileData.recipients` is missing
+- `profile` is `pact-box1` and `profileData.recipients` is not a non-empty array
+- any `pact-box1` recipient is missing `keyId` or `publicKey`
+- any required profile field is of the wrong type
 
 ## 9. Forward Compatibility
 
@@ -146,8 +154,11 @@ PACT v1 implementations SHOULD emit canonical strings using:
 
 - the `pact:v1:` wrapper
 - unpadded Base64URL for the outer body encoding
-- the spec enum spellings from this document
-- `dot-bang-base64-no-padding` when standard Base64 encoding is paired with the exact remap `{"+":".","/":"!"}`
+- canonical key ordering of:
+  - `messagePrefix`
+  - `profile`
+  - `profileData`
+- no insignificant JSON whitespace
 
 ## 11. Conformance Fixtures
 
@@ -172,24 +183,34 @@ Implementations SHOULD run these fixtures in automated tests.
 
 ### 11.2 Crypto fixtures
 
-`fixtures/crypto/` is reserved for deterministic encryption and decryption vectors shared across implementations.
+`fixtures/crypto/` contains deterministic encryption and decryption vectors for profiles whose wire behavior is already pinned tightly enough for cross-implementation comparison.
 
-## 12. Example
+PACT v1 crypto fixtures currently cover `pact-psk1`.
 
-Decoded JSON:
+## 12. Examples
+
+### 12.1 Shared-secret config
 
 ```json
 {
-  "messagePrefix": "[ENC]",
-  "keyHandling": "raw-base64-key",
-  "payloadLayout": "packed",
-  "packedEncoding": "dot-bang-base64-no-padding",
-  "crypto": {
-    "algorithm": "aes-256-gcm",
-    "ivBytes": 12,
-    "tagBits": 128
-  }
+  "messagePrefix": "pact1:",
+  "profile": "pact-psk1"
 }
 ```
 
-Canonical string form is the Base64URL-encoded representation of that JSON wrapped as `pact:v1:...`.
+### 12.2 Recipient config
+
+```json
+{
+  "messagePrefix": "pact1:",
+  "profile": "pact-box1",
+  "profileData": {
+    "recipients": [
+      {
+        "keyId": "alice-main",
+        "publicKey": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY"
+      }
+    ]
+  }
+}
+```

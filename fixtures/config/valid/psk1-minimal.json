@@ -1,0 +1,14 @@
+{
+  "name": "psk1-minimal",
+  "json": {
+    "messagePrefix": "pact1:",
+    "profile": "pact-psk1"
+  },
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtcHNrMSJ9",
+  "expectedNormalized": {
+    "messagePrefix": "pact1:",
+    "profile": "PACT_PSK1",
+    "profileData": {}
+  },
+  "notes": "Smallest valid shared-secret config."
+}

@@ -11,6 +11,8 @@ Each fixture file contains:
 - `ciphertext`
 - `deterministicInputs`
 
+These fixtures currently cover the standardized `pact-psk1` wire behavior only.
+
 `deterministicInputs` contains:
 
 - `ivBase64Url`
