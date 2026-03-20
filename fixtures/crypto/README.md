@@ -11,12 +11,15 @@ Each fixture file contains:
 - `ciphertext`
 - `deterministicInputs`
 
-These fixtures currently cover the standardized `pact-psk1` wire behavior only.
+These fixtures currently cover the standardized `pact-psk1` and `pact-box1` wire behavior.
 
-`deterministicInputs` contains:
+`deterministicInputs` contains profile-specific values:
 
-- `ivBase64Url`
-- optional `saltBase64Url`
+- `ivBase64Url` for `pact-psk1`
+- optional `saltBase64Url` for passphrase-based profiles
+- `payloadIvBase64Url` for `pact-box1`
+- `payloadKeyBase64Url` for `pact-box1`
+- `ephemeralPrivateKeyBase64Url` for `pact-box1`
 
 Conformance expectations:
 

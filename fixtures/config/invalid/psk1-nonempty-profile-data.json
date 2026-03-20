@@ -1,0 +1,12 @@
+{
+  "name": "psk1-nonempty-profile-data",
+  "json": {
+    "messagePrefix": "pact1:",
+    "profile": "pact-psk1",
+    "profileData": {
+      "unexpected": true
+    }
+  },
+  "expectedErrorContains": "PACT psk1 does not allow non-empty profileData",
+  "notes": "Invalid because pact-psk1 may only omit profileData or provide an empty object."
+}

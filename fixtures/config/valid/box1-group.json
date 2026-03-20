@@ -7,16 +7,16 @@
       "recipients": [
         {
           "keyId": "alice-main",
-          "publicKey": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY"
+          "publicKey": "B6N8vBQgk8i3VdwbEOhstCY3StFqqFPtC9_AsrhtHHw"
         },
         {
           "keyId": "bob-main",
-          "publicKey": "YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODk"
+          "publicKey": "WGmv9FBUlzLLqu1eXfmzCm2jHLDldCutWtShp2jxpns"
         }
       ]
     }
   },
-  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtYm94MSIsInByb2ZpbGVEYXRhIjp7InJlY2lwaWVudHMiOlt7ImtleUlkIjoiYWxpY2UtbWFpbiIsInB1YmxpY0tleSI6Ik1ERXlNelExTmpjNE9XRmlZMlJsWmpBeE1qTTBOVFkzT0RsaFltTmtaV1kifSx7ImtleUlkIjoiYm9iLW1haW4iLCJwdWJsaWNLZXkiOiJZV0pqWkdWbU1ERXlNelExTmpjNE9XRmlZMlJsWmpBeE1qTTBOVFkzT0RrIn1dfX0",
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtYm94MSIsInByb2ZpbGVEYXRhIjp7InJlY2lwaWVudHMiOlt7ImtleUlkIjoiYWxpY2UtbWFpbiIsInB1YmxpY0tleSI6IkI2Tjh2QlFnazhpM1Zkd2JFT2hzdENZM1N0RnFxRlB0QzlfQXNyaHRISHcifSx7ImtleUlkIjoiYm9iLW1haW4iLCJwdWJsaWNLZXkiOiJXR212OUZCVWx6TExxdTFlWGZtekNtMmpITERsZEN1dFd0U2hwMmp4cG5zIn1dfX0",
   "expectedNormalized": {
     "messagePrefix": "pact1:",
     "profile": "PACT_BOX1",
@@ -24,11 +24,11 @@
       "recipients": [
         {
           "keyId": "alice-main",
-          "publicKey": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY"
+          "publicKey": "B6N8vBQgk8i3VdwbEOhstCY3StFqqFPtC9_AsrhtHHw"
         },
         {
           "keyId": "bob-main",
-          "publicKey": "YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODk"
+          "publicKey": "WGmv9FBUlzLLqu1eXfmzCm2jHLDldCutWtShp2jxpns"
         }
       ]
     }

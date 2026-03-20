@@ -114,6 +114,91 @@ Each recipient object MUST contain:
 
 Unknown recipient object fields MAY be preserved by implementations when feasible.
 
+`pact-box1` defines `publicKey` as:
+
+- the raw 32-byte X25519 public key
+- encoded using unpadded Base64URL
+
+The corresponding private key format used by implementations is:
+
+- the raw 32-byte X25519 private key
+- encoded using unpadded Base64URL
+
+### 6.3 `pact-box1` Wire Format
+
+`pact-box1` ciphertexts are encoded as:
+
+`<messagePrefix><base64url(json)>`
+
+Where the decoded JSON payload uses the canonical key order:
+
+- `profile`
+- `ephemeralPublicKey`
+- `payloadIv`
+- `recipients`
+- `ciphertext`
+
+The payload JSON MUST contain:
+
+- `profile`: the fixed string `pact-box1`
+- `ephemeralPublicKey`: sender ephemeral X25519 public key, encoded as unpadded Base64URL raw 32 bytes
+- `payloadIv`: AES-GCM IV for the shared payload ciphertext, encoded as unpadded Base64URL raw 12 bytes
+- `recipients`: non-empty array
+- `ciphertext`: AES-GCM payload ciphertext bytes, encoded as unpadded Base64URL
+
+Each payload recipient object MUST use canonical key order:
+
+- `keyId`
+- `wrappedKey`
+
+Each payload recipient object MUST contain:
+
+- `keyId`: string
+- `wrappedKey`: wrapped payload key bytes encoded as unpadded Base64URL
+
+The `recipients` array order in the ciphertext payload MUST match the `profileData.recipients` order from the config used to encrypt it.
+
+### 6.4 `pact-box1` Cryptographic Contract
+
+`pact-box1` pins the following cryptographic behavior:
+
+- recipient key agreement: X25519
+- payload encryption: AES-256-GCM
+- payload content key: random 32 bytes
+- payload IV: random 12 bytes
+- wrapped payload-key encryption: AES-256-GCM
+- key derivation for each recipient wrap: HKDF-SHA256
+
+Encryption works as follows:
+
+1. generate a random 32-byte payload content key
+2. generate a random 12-byte payload IV
+3. encrypt the plaintext with AES-256-GCM using the payload key and payload IV
+4. generate a fresh ephemeral X25519 key pair for the message
+5. for each recipient:
+   - derive a 32-byte X25519 shared secret using the sender ephemeral private key and the recipient public key
+   - run HKDF-SHA256 over that shared secret with:
+     - salt: empty
+     - info: UTF-8 string `pact-box1-wrap`
+     - output length: 44 bytes
+   - split the HKDF output into:
+     - first 32 bytes: AES-256-GCM wrap key
+     - next 12 bytes: AES-GCM wrap IV
+   - wrap the 32-byte payload content key using AES-256-GCM with the derived wrap key and wrap IV
+6. emit one payload recipient entry per config recipient, preserving config order
+
+Decryption works as follows:
+
+1. parse the outer payload JSON
+2. for each payload recipient entry:
+   - derive the same X25519 shared secret using the recipient private key and the payload `ephemeralPublicKey`
+   - derive the same 44-byte HKDF output using `pact-box1-wrap`
+   - attempt to decrypt `wrappedKey`
+3. the first successful unwrap yields the 32-byte payload key
+4. decrypt `ciphertext` using AES-256-GCM and `payloadIv`
+
+If no `wrappedKey` entry can be decrypted with the provided private key, decryption MUST fail.
+
 ## 7. Secret Handling
 
 PACT strings MUST NOT embed:
@@ -139,6 +224,7 @@ Implementations MUST reject configs when:
 - `profile` is `pact-box1` and `profileData.recipients` is not a non-empty array
 - any `pact-box1` recipient is missing `keyId` or `publicKey`
 - any required profile field is of the wrong type
+- any `pact-box1` `publicKey` is not a valid unpadded Base64URL X25519 public key
 
 ## 9. Forward Compatibility
 
@@ -185,7 +271,7 @@ Implementations SHOULD run these fixtures in automated tests.
 
 `fixtures/crypto/` contains deterministic encryption and decryption vectors for profiles whose wire behavior is already pinned tightly enough for cross-implementation comparison.
 
-PACT v1 crypto fixtures currently cover `pact-psk1`.
+PACT v1 crypto fixtures currently cover `pact-psk1` and `pact-box1`.
 
 ## 12. Examples
 
@@ -212,5 +298,22 @@ PACT v1 crypto fixtures currently cover `pact-psk1`.
       }
     ]
   }
+}
+```
+
+### 12.3 `pact-box1` ciphertext payload shape
+
+```json
+{
+  "profile": "pact-box1",
+  "ephemeralPublicKey": "p2V4R1RzRWRfYmFzZTY0dXJsX2VwaGVtZXJhbF9wdWI",
+  "payloadIv": "AAECAwQFBgcICQoL",
+  "recipients": [
+    {
+      "keyId": "alice-main",
+      "wrappedKey": "WmV4YW1wbGVfd3JhcHBlZF9rZXlfYnl0ZXM"
+    }
+  ],
+  "ciphertext": "ZXhhbXBsZV9jaXBoZXJ0ZXh0X2J5dGVz"
 }
 ```

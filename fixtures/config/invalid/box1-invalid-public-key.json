@@ -1,0 +1,17 @@
+{
+  "name": "box1-invalid-public-key",
+  "json": {
+    "messagePrefix": "pact1:",
+    "profile": "pact-box1",
+    "profileData": {
+      "recipients": [
+        {
+          "keyId": "alice-main",
+          "publicKey": "not-a-valid-key"
+        }
+      ]
+    }
+  },
+  "expectedErrorContains": "Invalid X25519 public key: profileData.recipients[0].publicKey",
+  "notes": "Invalid because pact-box1 recipient public keys must be unpadded Base64URL-encoded 32-byte X25519 public keys."
+}

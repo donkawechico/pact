@@ -10,11 +10,11 @@ This example shows a PACT v1 config for encrypting to one or more recipients usi
     "recipients": [
       {
         "keyId": "alice-main",
-        "publicKey": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY"
+        "publicKey": "B6N8vBQgk8i3VdwbEOhstCY3StFqqFPtC9_AsrhtHHw"
       },
       {
         "keyId": "bob-main",
-        "publicKey": "YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODk"
+        "publicKey": "WGmv9FBUlzLLqu1eXfmzCm2jHLDldCutWtShp2jxpns"
       }
     ]
   }

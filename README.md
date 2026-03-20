@@ -39,4 +39,5 @@ PACT is currently an early public draft. The current direction for `PACT v1` is:
 
 - one shared-secret profile for pairwise and group use
 - one public-key recipient profile for direct and small-group use
-- profile-specific extensions and richer envelope details layered in after the core profile model is stable
+- deterministic crypto fixtures for both stock profiles
+- profile-specific extensions layered in after the core stock profiles are stable
