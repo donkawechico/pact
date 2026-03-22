@@ -401,3 +401,19 @@ PACT v1 crypto fixtures currently cover `pact-psk1`, `pact-psk2`, and `pact-box1
   "ciphertext": "ZXhhbXBsZV9jaXBoZXJ0ZXh0X2J5dGVz"
 }
 ```
+
+## 14. Open Issues
+
+### 14.1 Transport remap ambiguity
+
+Non-normative note:
+
+`transportData.charRemap` currently validates single-character mappings with unique destination values, but that alone does not guarantee unambiguous inversion.
+
+Example:
+
+- an encoding alphabet already permits both `/` and `+`
+- a transport remap maps `/` to `+`
+- ciphertext that originally contained a literal `+` becomes ambiguous after inversion
+
+A future revision may tighten `charRemap` validation so destination characters must not collide with the native encoded alphabet of the selected profile.
