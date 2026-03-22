@@ -9,6 +9,7 @@ PACT is a protocol and configuration spec for sharing application-layer encrypti
 - Make encryption profile exchange easy across independent apps.
 - Keep the number of stock profiles small and opinionated.
 - Keep the wire format versioned and deterministic.
+- Allow optional transport-layer adaptations without fragmenting profile semantics.
 - Support interoperable application-layer encryption overlays over existing host apps.
 - Provide conformance fixtures so multiple implementations can verify compatibility.
 
@@ -37,7 +38,9 @@ The intended project shape is:
 
 PACT is currently an early public draft. The current direction for `PACT v1` is:
 
-- one shared-secret profile for pairwise and group use
+- two shared-secret profiles for pairwise and group use
+  - one compact ASCII85 option
+  - one conservative inline-base64 option
 - one public-key recipient profile for direct and small-group use
-- deterministic crypto fixtures for both stock profiles
+- deterministic crypto fixtures for all stock profiles
 - profile-specific extensions layered in after the core stock profiles are stable

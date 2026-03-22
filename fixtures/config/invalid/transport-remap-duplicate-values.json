@@ -1,0 +1,14 @@
+{
+  "name": "transport-remap-duplicate-values",
+  "json": {
+    "messagePrefix": "[ENC]",
+    "profile": "pact-psk2",
+    "transportData": {
+      "charRemap": {
+        "+": ".",
+        "/": "."
+      }
+    }
+  },
+  "expectedErrorContains": "Character remap values must be unique"
+}

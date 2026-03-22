@@ -1,0 +1,10 @@
+{
+  "name": "psk2-remapped-inline-base64",
+  "configString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoiW0VOQ10iLCJwcm9maWxlIjoicGFjdC1wc2syIiwidHJhbnNwb3J0RGF0YSI6eyJjaGFyUmVtYXAiOnsiKyI6Ii4iLCIvIjoiISJ9fX0",
+  "secret": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+  "plaintext": "Testing123",
+  "ciphertext": "[ENC]AAECAwQFBgcICQoLE2elb6yLpSq!coCH.6wswH!VbxSMiBMtC7k",
+  "deterministicInputs": {
+    "ivBase64Url": "AAECAwQFBgcICQoL"
+  }
+}

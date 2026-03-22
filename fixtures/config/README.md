@@ -13,8 +13,9 @@ Required fields:
 
 `expectedNormalized` uses implementation-facing normalized names for easier automated assertions:
 
-- `profile`: `PACT_PSK1` or `PACT_BOX1`
+- `profile`: `PACT_PSK1`, `PACT_PSK2`, or `PACT_BOX1`
 - `profileData`: normalized profile-specific public parameters
+- `transportData`: normalized transport-layer options such as `charRemap`
 
 ## Invalid fixtures
 

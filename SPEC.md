@@ -20,6 +20,7 @@ PACT intentionally separates:
 
 - **profile selection**: which interoperable cryptographic contract is in use
 - **public configuration**: non-secret data needed by that contract
+- **transport adaptation**: optional text-surface adjustments layered on top of a profile
 - **secret material**: passphrases, symmetric keys, private keys, or tokens exchanged out of band
 
 PACT v1 does **not** standardize UI, trust establishment, or transport security.
@@ -58,10 +59,12 @@ The decoded JSON object MAY contain unknown fields. Unknown fields MUST be ignor
 ### 5.2 Optional fields
 
 - `profileData`: object
+- `transportData`: object
 
 ### 5.3 Standard profile names
 
 - `pact-psk1`
+- `pact-psk2`
 - `pact-box1`
 
 Implementations MUST reject unknown `profile` values.
@@ -86,7 +89,35 @@ Security model:
 `pact-psk1` does not require `profileData`.
 If `profileData` is present, it MUST be an empty object.
 
-### 6.2 `pact-box1`
+### 6.2 `pact-psk2`
+
+`pact-psk2` is the shared-secret inline-base64 profile.
+
+Intended use:
+
+- pairwise messaging where both sides already share a secret
+- group messaging where multiple recipients share the same secret
+- host applications where a conservative base64-derived alphabet is preferred over ASCII85
+
+Security model:
+
+- one symmetric secret is shared out of band
+- every holder of that secret can decrypt the same message
+
+`pact-psk2` does not require `profileData`.
+If `profileData` is present, it MUST be an empty object.
+
+`pact-psk2` pins the following cryptographic behavior:
+
+- secret type: raw 32-byte AES key encoded as unpadded Base64URL
+- payload encryption: AES-256-GCM
+- IV: random 12 bytes
+- authentication tag: full 16-byte GCM tag
+- payload bytes before text encoding: `iv || ciphertext`
+- text encoding: unpadded standard Base64
+- wire format: `<messagePrefix><encodedPayload>`
+
+### 6.3 `pact-box1`
 
 `pact-box1` is the recipient-public-key envelope profile.
 
@@ -124,7 +155,7 @@ The corresponding private key format used by implementations is:
 - the raw 32-byte X25519 private key
 - encoded using unpadded Base64URL
 
-### 6.3 `pact-box1` Wire Format
+### 6.4 `pact-box1` Wire Format
 
 `pact-box1` ciphertexts are encoded as:
 
@@ -158,7 +189,7 @@ Each payload recipient object MUST contain:
 
 The `recipients` array order in the ciphertext payload MUST match the `profileData.recipients` order from the config used to encrypt it.
 
-### 6.4 `pact-box1` Cryptographic Contract
+### 6.5 `pact-box1` Cryptographic Contract
 
 `pact-box1` pins the following cryptographic behavior:
 
@@ -211,7 +242,30 @@ PACT strings MUST NOT embed:
 
 Secret exchange is explicitly out of scope.
 
-## 8. Validation Rules
+## 8. Transport Data
+
+PACT v1 optionally supports transport-layer adaptations that are not part of profile selection.
+
+### 8.1 `transportData.charRemap`
+
+`transportData.charRemap` MAY be present as an object mapping one-character strings to one-character strings.
+
+Intended use:
+
+- adapting encrypted payload text to host applications with awkward character handling
+- preserving a fixed profile while allowing text-surface customization on top
+
+Rules:
+
+- remapping is applied after profile-defined text encoding during encryption
+- the inverse remapping is applied before profile-defined text decoding during decryption
+- remapping does not change the underlying cryptographic profile
+- remapping keys MUST be unique one-character strings
+- remapping values MUST be unique one-character strings
+
+Profiles MUST NOT redefine or require any particular `charRemap`.
+
+## 9. Validation Rules
 
 Implementations MUST reject configs when:
 
@@ -219,14 +273,19 @@ Implementations MUST reject configs when:
 - required fields are of the wrong type
 - `profile` is unknown
 - `profileData` is present but is not an object
+- `transportData` is present but is not an object
 - `profile` is `pact-psk1` and `profileData` is non-empty
+- `profile` is `pact-psk2` and `profileData` is non-empty
 - `profile` is `pact-box1` and `profileData.recipients` is missing
 - `profile` is `pact-box1` and `profileData.recipients` is not a non-empty array
 - any `pact-box1` recipient is missing `keyId` or `publicKey`
 - any required profile field is of the wrong type
 - any `pact-box1` `publicKey` is not a valid unpadded Base64URL X25519 public key
+- any `transportData.charRemap` key is not a one-character string
+- any `transportData.charRemap` value is not a one-character string
+- `transportData.charRemap` maps multiple source characters to the same destination character
 
-## 9. Forward Compatibility
+## 10. Forward Compatibility
 
 PACT parsers MUST:
 
@@ -234,7 +293,7 @@ PACT parsers MUST:
 - ignore unknown top-level fields within a known version
 - preserve unknown fields when feasible during parse/serialize round-trips
 
-## 10. Canonical Serialization Notes
+## 11. Canonical Serialization Notes
 
 PACT v1 implementations SHOULD emit canonical strings using:
 
@@ -244,13 +303,14 @@ PACT v1 implementations SHOULD emit canonical strings using:
   - `messagePrefix`
   - `profile`
   - `profileData`
+  - `transportData`
 - no insignificant JSON whitespace
 
-## 11. Conformance Fixtures
+## 12. Conformance Fixtures
 
 The `fixtures/` directory is the machine-readable conformance contract for independent implementations.
 
-### 11.1 Config fixtures
+### 12.1 Config fixtures
 
 `fixtures/config/valid/*.json` contain:
 
@@ -267,15 +327,15 @@ The `fixtures/` directory is the machine-readable conformance contract for indep
 
 Implementations SHOULD run these fixtures in automated tests.
 
-### 11.2 Crypto fixtures
+### 12.2 Crypto fixtures
 
 `fixtures/crypto/` contains deterministic encryption and decryption vectors for profiles whose wire behavior is already pinned tightly enough for cross-implementation comparison.
 
-PACT v1 crypto fixtures currently cover `pact-psk1` and `pact-box1`.
+PACT v1 crypto fixtures currently cover `pact-psk1`, `pact-psk2`, and `pact-box1`.
 
-## 12. Examples
+## 13. Examples
 
-### 12.1 Shared-secret config
+### 13.1 Shared-secret config
 
 ```json
 {
@@ -284,7 +344,31 @@ PACT v1 crypto fixtures currently cover `pact-psk1` and `pact-box1`.
 }
 ```
 
-### 12.2 Recipient config
+### 13.2 Inline-base64 shared-secret config
+
+```json
+{
+  "messagePrefix": "[ENC]",
+  "profile": "pact-psk2"
+}
+```
+
+### 13.3 Shared-secret config with transport remap
+
+```json
+{
+  "messagePrefix": "[ENC]",
+  "profile": "pact-psk2",
+  "transportData": {
+    "charRemap": {
+      "+": ".",
+      "/": "!"
+    }
+  }
+}
+```
+
+### 13.4 Recipient config
 
 ```json
 {
@@ -301,7 +385,7 @@ PACT v1 crypto fixtures currently cover `pact-psk1` and `pact-box1`.
 }
 ```
 
-### 12.3 `pact-box1` ciphertext payload shape
+### 13.5 `pact-box1` ciphertext payload shape
 
 ```json
 {
