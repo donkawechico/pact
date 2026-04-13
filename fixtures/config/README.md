@@ -15,6 +15,7 @@ Required fields:
 
 `expectedNormalized` uses implementation-facing normalized names for easier automated assertions:
 
+- `messagePrefix`: application-chosen token that is serialized inside brackets in config-bound ciphertexts
 - `profile`: `PACT_PSK1`, `PACT_PSK2`, or `PACT_BOX1`
 - `profileData`: normalized profile-specific public parameters
 - `transportData`: normalized transport-layer options such as `charRemap`

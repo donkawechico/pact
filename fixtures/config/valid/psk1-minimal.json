@@ -1,12 +1,12 @@
 {
   "name": "psk1-minimal",
   "json": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "pact-psk1"
   },
-  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtcHNrMSJ9",
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDEiLCJwcm9maWxlIjoicGFjdC1wc2sxIn0",
   "expectedNormalized": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "PACT_PSK1",
     "profileData": {}
   },

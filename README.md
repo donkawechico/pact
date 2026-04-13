@@ -34,6 +34,29 @@ The intended project shape is:
 - `pact-kotlin`: a Kotlin/JVM reference implementation
 - future implementations such as `pact-python` or `pact-js` consuming the same fixtures
 
+## Auto-Detection Guidance
+
+Apps can detect self-describing encrypted messages by scanning for the literal `[pact]:v1:` prefix. After parsing the compact profile ID and remap spec, an app may try locally configured secrets that match that profile. A key worked only when authenticated decryption succeeds.
+
+Recommended success conditions by profile:
+
+- `pact-psk1` (`profile-id` `1`): inverse the remap, decode the compact payload, and try local `pact-psk1` shared secrets with the profile's authenticated decrypt operation. Treat authenticated decrypt success as the match. Do not treat ASCII85 decoding alone as success.
+- `pact-psk2` (`profile-id` `2`): inverse the remap, standard-Base64 decode the payload, split out the IV and AES-GCM ciphertext/tag, and try local `pact-psk2` shared secrets as AES-256-GCM keys. Treat GCM tag verification as the match.
+- `pact-box1` (`profile-id` `3`): inverse the remap, Base64URL-decode and parse the envelope JSON, then try local recipient private keys against each `wrappedKey`. Treat a successful authenticated unwrap plus successful authenticated payload decrypt as the match.
+
+Illustrative app logic:
+
+```text
+for secret in secretsCompatibleWith(profileId):
+  result = tryDecryptWithProfile(profileId, remappedPayload, secret)
+  if result.authenticated:
+    return result.plaintextBytes
+
+return noMatchingSecret
+```
+
+Apps should not decide success by checking whether output looks like readable English, valid UTF-8, or a plausible message.
+
 ## Status
 
 PACT is currently an early public draft. The current direction for `PACT v1` is:
@@ -43,5 +66,6 @@ PACT is currently an early public draft. The current direction for `PACT v1` is:
   - one conservative inline-base64 option
 - one public-key recipient profile for direct and small-group use
 - self-describing encrypted message preambles using `[pact]:v1:<profile-id>:<remap-spec>:<encrypted-payload>`
+- config-bound encrypted messages that serialize the configured `messagePrefix` token inside brackets, such as `ENC` becoming `[ENC]`
 - deterministic crypto fixtures for all stock profiles
 - profile-specific extensions layered in after the core stock profiles are stable

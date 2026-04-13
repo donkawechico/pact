@@ -1,7 +1,7 @@
 {
   "name": "box1-group",
   "json": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "pact-box1",
     "profileData": {
       "recipients": [
@@ -16,9 +16,9 @@
       ]
     }
   },
-  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtYm94MSIsInByb2ZpbGVEYXRhIjp7InJlY2lwaWVudHMiOlt7ImtleUlkIjoiYWxpY2UtbWFpbiIsInB1YmxpY0tleSI6IkI2Tjh2QlFnazhpM1Zkd2JFT2hzdENZM1N0RnFxRlB0QzlfQXNyaHRISHcifSx7ImtleUlkIjoiYm9iLW1haW4iLCJwdWJsaWNLZXkiOiJXR212OUZCVWx6TExxdTFlWGZtekNtMmpITERsZEN1dFd0U2hwMmp4cG5zIn1dfX0",
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDEiLCJwcm9maWxlIjoicGFjdC1ib3gxIiwicHJvZmlsZURhdGEiOnsicmVjaXBpZW50cyI6W3sia2V5SWQiOiJhbGljZS1tYWluIiwicHVibGljS2V5IjoiQjZOOHZCUWdrOGkzVmR3YkVPaHN0Q1kzU3RGcXFGUHRDOV9Bc3JodEhIdyJ9LHsia2V5SWQiOiJib2ItbWFpbiIsInB1YmxpY0tleSI6IldHbXY5RkJVbHpMTHF1MWVYZm16Q20yakhMRGxkQ3V0V3RTaHAyanhwbnMifV19fQ",
   "expectedNormalized": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "PACT_BOX1",
     "profileData": {
       "recipients": [

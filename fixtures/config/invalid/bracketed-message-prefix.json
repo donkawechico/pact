@@ -1,0 +1,9 @@
+{
+  "name": "bracketed-message-prefix",
+  "json": {
+    "messagePrefix": "[ENC]",
+    "profile": "pact-psk2"
+  },
+  "expectedErrorContains": "messagePrefix must not contain brackets",
+  "notes": "Invalid because messagePrefix is the token that is serialized inside brackets."
+}

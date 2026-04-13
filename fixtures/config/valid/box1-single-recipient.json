@@ -1,7 +1,7 @@
 {
   "name": "box1-single-recipient",
   "json": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "pact-box1",
     "profileData": {
       "recipients": [
@@ -12,9 +12,9 @@
       ]
     }
   },
-  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtYm94MSIsInByb2ZpbGVEYXRhIjp7InJlY2lwaWVudHMiOlt7ImtleUlkIjoiYWxpY2UtbWFpbiIsInB1YmxpY0tleSI6IkI2Tjh2QlFnazhpM1Zkd2JFT2hzdENZM1N0RnFxRlB0QzlfQXNyaHRISHcifV19fQ",
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDEiLCJwcm9maWxlIjoicGFjdC1ib3gxIiwicHJvZmlsZURhdGEiOnsicmVjaXBpZW50cyI6W3sia2V5SWQiOiJhbGljZS1tYWluIiwicHVibGljS2V5IjoiQjZOOHZCUWdrOGkzVmR3YkVPaHN0Q1kzU3RGcXFGUHRDOV9Bc3JodEhIdyJ9XX19",
   "expectedNormalized": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "PACT_BOX1",
     "profileData": {
       "recipients": [

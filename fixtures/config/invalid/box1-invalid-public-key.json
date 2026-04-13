@@ -1,7 +1,7 @@
 {
   "name": "box1-invalid-public-key",
   "json": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "pact-box1",
     "profileData": {
       "recipients": [

@@ -1,0 +1,9 @@
+{
+  "name": "empty-message-prefix",
+  "json": {
+    "messagePrefix": "",
+    "profile": "pact-psk1"
+  },
+  "expectedErrorContains": "messagePrefix must not be empty",
+  "notes": "Invalid because config-bound ciphertexts serialize the prefix token inside brackets."
+}

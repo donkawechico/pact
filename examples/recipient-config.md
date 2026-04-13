@@ -4,7 +4,7 @@ This example shows a PACT v1 config for encrypting to one or more recipients usi
 
 ```json
 {
-  "messagePrefix": "pact1:",
+  "messagePrefix": "pact1",
   "profile": "pact-box1",
   "profileData": {
     "recipients": [

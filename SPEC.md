@@ -63,7 +63,7 @@ Self-describing encrypted messages use the following preamble:
 
 Where:
 
-- `[pact]` is the fixed message preamble tag
+- `pact` is the fixed self-describing message prefix token, serialized as the bracketed preamble tag `[pact]`
 - `v1` is the protocol version
 - `<profile-id>` is a compact profile ID from the v1 profile ID registry
 - `<remap-spec>` is a compact character-remap specification
@@ -73,7 +73,7 @@ Implementations can auto-detect self-describing PACT messages by scanning for th
 
 Parsers MUST treat the first four `:` characters as preamble delimiters and MUST treat the rest of the string as `<encoded-payload>`. This allows profile payload alphabets to contain `:` without requiring payload escaping.
 
-The `<encoded-payload>` omits the config string's `messagePrefix`. For example, if the config-bound profile wire format would have emitted `[ENC]AA...`, the self-describing message payload segment contains only `AA...`.
+The `<encoded-payload>` omits the config string's bracketed message prefix. For example, if the config-bound profile wire format would emit `[ENC]AA...`, the self-describing message payload segment contains only `AA...`.
 
 ### 4.2 Compact Profile ID Registry
 
@@ -118,6 +118,51 @@ Rules:
 
 Because `:` is the segment delimiter, an attempted `:` destination can surface as a malformed remap spec during parsing.
 
+### 4.4 Auto-Detection Decryption Success
+
+When a client auto-detects `[pact]:v1:`, it MAY try locally configured secret material that is compatible with the compact profile ID. A candidate secret succeeds only when the selected profile's authenticated cryptographic operation succeeds. Implementations MUST NOT treat payload decoding, UTF-8 decoding, language detection, or plaintext readability as proof that a secret worked.
+
+Recommended profile-specific success conditions:
+
+- `pact-psk1` (`profile-id` `1`): inverse-apply the compact remap, decode the compact profile payload, and try each local shared secret using the profile-defined authenticated decrypt operation. Success is authenticated decrypt returning plaintext bytes. Payload decoding alone is not success.
+- `pact-psk2` (`profile-id` `2`): inverse-apply the compact remap, standard-Base64 decode the payload, split the decoded bytes according to the profile wire format, and try each local shared secret as the AES-256-GCM key. Success is AES-GCM tag verification and plaintext bytes returned by the decrypt operation.
+- `pact-box1` (`profile-id` `3`): inverse-apply the compact remap, Base64URL-decode and parse the payload JSON, then try local recipient private keys against the payload recipient entries. Success requires an authenticated `wrappedKey` unwrap to produce the payload key and a second authenticated AES-GCM decrypt of the payload ciphertext.
+
+Illustrative pseudocode:
+
+```text
+detectAndDecrypt(message, localSecrets):
+  preamble = parseSelfDescribingPreamble(message)
+  payload = inverseApplyRemap(preamble.encodedPayload, preamble.remap)
+
+  if preamble.profileId == "1":
+    bytes = ascii85Decode(payload)
+    for secret in localSecrets.sharedPsk1Secrets:
+      plaintext = tryProfilePsk1AuthenticatedDecrypt(bytes, secret)
+      if plaintext.authenticated:
+        return plaintext.bytes
+
+  if preamble.profileId == "2":
+    bytes = standardBase64Decode(payload)
+    iv, ciphertextAndTag = splitPsk2Payload(bytes)
+    for secret in localSecrets.sharedPsk2Secrets:
+      plaintext = aesGcmDecryptOrFail(secret, iv, ciphertextAndTag)
+      if plaintext.authenticated:
+        return plaintext.bytes
+
+  if preamble.profileId == "3":
+    envelope = parseBox1Payload(payload)
+    for privateKey in localSecrets.box1PrivateKeys:
+      for recipient in envelope.recipients:
+        payloadKey = tryAuthenticatedUnwrap(privateKey, envelope.ephemeralPublicKey, recipient.wrappedKey)
+        if payloadKey.authenticated:
+          plaintext = aesGcmDecryptOrFail(payloadKey.bytes, envelope.payloadIv, envelope.ciphertext)
+          if plaintext.authenticated:
+            return plaintext.bytes
+
+  return noMatchingSecret
+```
+
 ## 5. JSON Config Body
 
 The decoded JSON object MAY contain unknown fields. Unknown fields MUST be ignored by parsers that do not understand them.
@@ -126,6 +171,8 @@ The decoded JSON object MAY contain unknown fields. Unknown fields MUST be ignor
 
 - `messagePrefix`: string
 - `profile`: string enum
+
+`messagePrefix` is the application-chosen prefix token. Configs may choose any non-empty token that does not contain bracket characters. Config-bound encrypted messages serialize that token inside brackets before the profile-defined payload, for example `ENC` becomes `[ENC]`.
 
 ### 5.2 Optional fields
 
@@ -186,7 +233,7 @@ If `profileData` is present, it MUST be an empty object.
 - authentication tag: full 16-byte GCM tag
 - payload bytes before text encoding: `iv || ciphertext`
 - text encoding: unpadded standard Base64
-- wire format: `<messagePrefix><encodedPayload>`
+- wire format: `[<messagePrefix>]<encodedPayload>`
 
 ### 6.3 `pact-box1`
 
@@ -230,7 +277,7 @@ The corresponding private key format used by implementations is:
 
 `pact-box1` ciphertexts are encoded as:
 
-`<messagePrefix><base64url(json)>`
+`[<messagePrefix>]<base64url(json)>`
 
 Where the decoded JSON payload uses the canonical key order:
 
@@ -342,6 +389,8 @@ Implementations MUST reject configs when:
 
 - required fields are missing
 - required fields are of the wrong type
+- `messagePrefix` is empty
+- `messagePrefix` contains `[` or `]`
 - `profile` is unknown
 - `profileData` is present but is not an object
 - `transportData` is present but is not an object
@@ -418,7 +467,7 @@ Implementations SHOULD run these fixtures in automated tests.
 
 PACT v1 crypto fixtures currently cover `pact-psk1`, `pact-psk2`, and `pact-box1`.
 
-Some crypto fixtures use legacy config-bound message prefixes, while self-describing message fixtures use `[pact]:v1:<profile-id>:<remap-spec>:<encoded-payload>` in their `ciphertext` field. Self-describing message fixtures may still include `configString` as encryption context, especially for profiles such as `pact-box1` that require recipient public keys when encrypting.
+Config-bound crypto fixtures include the bracketed `messagePrefix` before the encoded payload in their `ciphertext` field. Self-describing message fixtures use `[pact]:v1:<profile-id>:<remap-spec>:<encoded-payload>` in their `ciphertext` field. Self-describing message fixtures may still include `configString` as encryption context, especially for profiles such as `pact-box1` that require recipient public keys when encrypting.
 
 ### 12.3 Message fixtures
 
@@ -434,7 +483,7 @@ Some crypto fixtures use legacy config-bound message prefixes, while self-descri
 
 ```json
 {
-  "messagePrefix": "pact1:",
+  "messagePrefix": "pact1",
   "profile": "pact-psk1"
 }
 ```
@@ -443,7 +492,7 @@ Some crypto fixtures use legacy config-bound message prefixes, while self-descri
 
 ```json
 {
-  "messagePrefix": "[ENC]",
+  "messagePrefix": "ENC",
   "profile": "pact-psk2"
 }
 ```
@@ -452,7 +501,7 @@ Some crypto fixtures use legacy config-bound message prefixes, while self-descri
 
 ```json
 {
-  "messagePrefix": "[ENC]",
+  "messagePrefix": "ENC",
   "profile": "pact-psk2",
   "transportData": {
     "charRemap": {
@@ -467,7 +516,7 @@ Some crypto fixtures use legacy config-bound message prefixes, while self-descri
 
 ```json
 {
-  "messagePrefix": "pact1:",
+  "messagePrefix": "pact1",
   "profile": "pact-box1",
   "profileData": {
     "recipients": [

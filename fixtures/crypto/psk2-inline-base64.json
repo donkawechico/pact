@@ -1,6 +1,6 @@
 {
   "name": "psk2-inline-base64",
-  "configString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoiW0VOQ10iLCJwcm9maWxlIjoicGFjdC1wc2syIn0",
+  "configString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoiRU5DIiwicHJvZmlsZSI6InBhY3QtcHNrMiJ9",
   "secret": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
   "plaintext": "Testing123",
   "ciphertext": "[ENC]AAECAwQFBgcICQoLE2elb6yLpSq/coCH+6wswH/VbxSMiBMtC7k",

@@ -1,12 +1,12 @@
 {
   "name": "psk2-minimal",
   "json": {
-    "messagePrefix": "[ENC]",
+    "messagePrefix": "ENC",
     "profile": "pact-psk2"
   },
-  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoiW0VOQ10iLCJwcm9maWxlIjoicGFjdC1wc2syIn0",
+  "canonicalString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoiRU5DIiwicHJvZmlsZSI6InBhY3QtcHNrMiJ9",
   "expectedNormalized": {
-    "messagePrefix": "[ENC]",
+    "messagePrefix": "ENC",
     "profile": "PACT_PSK2",
     "profileData": {}
   },

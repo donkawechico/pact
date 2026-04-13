@@ -1,7 +1,7 @@
 {
   "name": "box1-missing-recipients",
   "json": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "pact-box1",
     "profileData": {}
   },

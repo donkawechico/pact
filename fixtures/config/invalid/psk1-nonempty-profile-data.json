@@ -1,7 +1,7 @@
 {
   "name": "psk1-nonempty-profile-data",
   "json": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "pact-psk1",
     "profileData": {
       "unexpected": true

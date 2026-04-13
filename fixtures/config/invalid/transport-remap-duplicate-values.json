@@ -1,7 +1,7 @@
 {
   "name": "transport-remap-duplicate-values",
   "json": {
-    "messagePrefix": "[ENC]",
+    "messagePrefix": "ENC",
     "profile": "pact-psk2",
     "transportData": {
       "charRemap": {

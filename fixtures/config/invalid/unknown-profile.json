@@ -1,7 +1,7 @@
 {
   "name": "unknown-profile",
   "json": {
-    "messagePrefix": "pact1:",
+    "messagePrefix": "pact1",
     "profile": "pact-custom1"
   },
   "expectedErrorContains": "Unknown profile: pact-custom1",
