@@ -2,7 +2,7 @@
 
 PACT stands for **Portable Application-layer Cryptography Template**.
 
-PACT is a protocol and configuration spec for sharing application-layer encryption settings between tools that wrap or overlay existing host applications. A PACT string names a fixed protocol profile and carries only the non-secret public parameters that profile needs.
+PACT is a protocol and configuration spec for sharing application-layer encryption settings between tools that wrap or overlay existing host applications. A PACT config string names a fixed protocol profile and carries only the non-secret public parameters that profile needs. A self-describing PACT message can also carry compact non-secret decoding metadata in its encrypted-message preamble.
 
 ## Goals
 
@@ -22,7 +22,7 @@ PACT is a protocol and configuration spec for sharing application-layer encrypti
 ## Repository Layout
 
 - `SPEC.md`: normative PACT v1 spec draft.
-- `fixtures/`: conformance fixtures for valid/invalid config strings and crypto vectors.
+- `fixtures/`: conformance fixtures for valid/invalid config strings, self-describing messages, and crypto vectors.
 - `examples/`: human-readable usage examples.
 - `CHANGELOG.md`: spec evolution notes.
 
@@ -42,5 +42,6 @@ PACT is currently an early public draft. The current direction for `PACT v1` is:
   - one compact ASCII85 option
   - one conservative inline-base64 option
 - one public-key recipient profile for direct and small-group use
+- self-describing encrypted message preambles using `[pact]:v1:<profile-id>:<remap-spec>:<encrypted-payload>`
 - deterministic crypto fixtures for all stock profiles
 - profile-specific extensions layered in after the core stock profiles are stable

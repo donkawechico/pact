@@ -1,0 +1,6 @@
+{
+  "name": "malformed-remap-hex",
+  "message": "[pact]:v1:2:2G.:AAECAw",
+  "expectedErrorContains": "Malformed remap source hex",
+  "notes": "Invalid because compact remap source hex must use uppercase hexadecimal digits."
+}

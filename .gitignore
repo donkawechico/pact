@@ -3,3 +3,6 @@
 .gradle/
 build/
 out/
+
+CLAUDE.md
+*.code-workspace

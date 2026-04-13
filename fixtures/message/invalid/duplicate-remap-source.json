@@ -1,0 +1,6 @@
+{
+  "name": "duplicate-remap-source",
+  "message": "[pact]:v1:2:2B.2B!:AAECAw",
+  "expectedErrorContains": "Duplicate remap source",
+  "notes": "Invalid because compact remap source characters must be unique."
+}

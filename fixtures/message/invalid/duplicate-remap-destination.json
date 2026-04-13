@@ -1,0 +1,6 @@
+{
+  "name": "duplicate-remap-destination",
+  "message": "[pact]:v1:2:2B.2F.:AAECAw",
+  "expectedErrorContains": "Duplicate remap destination",
+  "notes": "Invalid because compact remap destination characters must be unique."
+}

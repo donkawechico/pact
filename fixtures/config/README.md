@@ -2,6 +2,8 @@
 
 PACT config conformance fixtures are split into `valid/` and `invalid/`.
 
+Self-describing encrypted message validation fixtures live under `fixtures/message/`.
+
 ## Valid fixtures
 
 Required fields:

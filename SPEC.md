@@ -4,13 +4,15 @@ PACT stands for **Portable Application-layer Cryptography Template**.
 
 ## 1. Purpose
 
-PACT v1 defines a portable, shareable configuration string for interoperable application-layer cryptography over host applications that are not natively aware of the encrypted content.
+PACT v1 defines portable, interoperable application-layer cryptography over host applications that are not natively aware of the encrypted content.
 
 PACT v1 is **profile-first**:
 
-- a PACT string identifies a **named protocol profile**
+- a PACT config string identifies a **named protocol profile**
+- a self-describing PACT message identifies a profile by compact stable ID
 - a profile pins a concrete interoperability contract
 - a config string may carry only the **non-secret public parameters** that profile needs
+- a self-describing message may carry only the non-secret public parameters needed to recognize and decode that message
 
 PACT strings MUST NOT contain secret key material.
 
@@ -28,14 +30,20 @@ PACT v1 does **not** standardize UI, trust establishment, or transport security.
 ## 3. Terminology
 
 - **Host application**: the app through which encrypted payloads are sent.
-- **PACT-compatible application**: an app that can parse or emit PACT config strings.
+- **PACT-compatible application**: an app that can parse or emit PACT config strings or self-describing messages.
 - **Profile**: a named, fixed interoperability contract.
 - **Profile data**: non-secret public configuration required by a specific profile.
 - **Runtime config**: the normalized executable interpretation of a PACT string.
+- **Self-describing message**: an encrypted message with a PACT preamble containing compact non-secret decoding metadata.
 
-## 4. Canonical String Format
+## 4. String Formats
 
-PACT v1 strings use the following wrapper:
+PACT v1 defines two additive string formats:
+
+- config strings, used to share non-secret encryption settings
+- self-describing encrypted messages, used to allow PACT-compatible clients to detect and decode encrypted messages without a separate config string
+
+PACT v1 config strings use the following wrapper:
 
 `pact:v1:<base64url(json)>`
 
@@ -47,7 +55,70 @@ Where:
 
 Implementations MUST reject strings with an unknown scheme or version.
 
-## 5. JSON Body
+### 4.1 Self-Describing Encrypted Message Format
+
+Self-describing encrypted messages use the following preamble:
+
+`[pact]:v1:<profile-id>:<remap-spec>:<encoded-payload>`
+
+Where:
+
+- `[pact]` is the fixed message preamble tag
+- `v1` is the protocol version
+- `<profile-id>` is a compact profile ID from the v1 profile ID registry
+- `<remap-spec>` is a compact character-remap specification
+- `<encoded-payload>` is the profile-defined ciphertext payload after transport remapping
+
+Implementations can auto-detect self-describing PACT messages by scanning for the literal prefix `[pact]:v1:`.
+
+Parsers MUST treat the first four `:` characters as preamble delimiters and MUST treat the rest of the string as `<encoded-payload>`. This allows profile payload alphabets to contain `:` without requiring payload escaping.
+
+The `<encoded-payload>` omits the config string's `messagePrefix`. For example, if the config-bound profile wire format would have emitted `[ENC]AA...`, the self-describing message payload segment contains only `AA...`.
+
+### 4.2 Compact Profile ID Registry
+
+PACT v1 defines the following compact profile IDs:
+
+- `1`: `pact-psk1`
+- `2`: `pact-psk2`
+- `3`: `pact-box1`
+
+Implementations MUST reject unknown profile IDs.
+
+### 4.3 Compact Remap Specification
+
+The `<remap-spec>` segment is either empty or a concatenation of 3-character remap entries.
+
+Each remap entry contains:
+
+- two uppercase hexadecimal digits encoding the source character's ASCII code point
+- one literal destination character
+
+Example:
+
+`2B.2F!`
+
+This decodes to:
+
+```json
+{
+  "+": ".",
+  "/": "!"
+}
+```
+
+Rules:
+
+- an empty `<remap-spec>` means no transport remapping
+- source hex digits MUST use uppercase `0`-`9` and `A`-`F`
+- each source character MUST be unique
+- each destination character MUST be unique
+- destination characters MUST NOT be `:`
+- source characters MUST belong to the selected profile's encoded payload alphabet
+
+Because `:` is the segment delimiter, an attempted `:` destination can surface as a malformed remap spec during parsing.
+
+## 5. JSON Config Body
 
 The decoded JSON object MAY contain unknown fields. Unknown fields MUST be ignored by parsers that do not understand them.
 
@@ -285,11 +356,25 @@ Implementations MUST reject configs when:
 - any `transportData.charRemap` value is not a one-character string
 - `transportData.charRemap` maps multiple source characters to the same destination character
 
+Implementations MUST reject self-describing messages when:
+
+- the message does not contain the four required preamble delimiters
+- the preamble tag is not `[pact]`
+- the version is unknown
+- the compact profile ID is unknown
+- the compact remap spec length is not a multiple of 3
+- any compact remap source hex is malformed or not uppercase
+- any compact remap source character is duplicated
+- any compact remap destination character is duplicated
+- any compact remap destination character is `:`
+- any compact remap source character is outside the selected profile's encoded payload alphabet
+
 ## 10. Forward Compatibility
 
 PACT parsers MUST:
 
 - reject unknown versions
+- reject unknown compact profile IDs in self-describing messages
 - ignore unknown top-level fields within a known version
 - preserve unknown fields when feasible during parse/serialize round-trips
 
@@ -332,6 +417,16 @@ Implementations SHOULD run these fixtures in automated tests.
 `fixtures/crypto/` contains deterministic encryption and decryption vectors for profiles whose wire behavior is already pinned tightly enough for cross-implementation comparison.
 
 PACT v1 crypto fixtures currently cover `pact-psk1`, `pact-psk2`, and `pact-box1`.
+
+Some crypto fixtures use legacy config-bound message prefixes, while self-describing message fixtures use `[pact]:v1:<profile-id>:<remap-spec>:<encoded-payload>` in their `ciphertext` field. Self-describing message fixtures may still include `configString` as encryption context, especially for profiles such as `pact-box1` that require recipient public keys when encrypting.
+
+### 12.3 Message fixtures
+
+`fixtures/message/invalid/*.json` contain malformed self-describing PACT messages with:
+
+- `name`
+- `message`
+- `expectedErrorContains`
 
 ## 13. Examples
 
@@ -402,13 +497,25 @@ PACT v1 crypto fixtures currently cover `pact-psk1`, `pact-psk2`, and `pact-box1
 }
 ```
 
+### 13.6 Self-describing shared-secret message
+
+```text
+[pact]:v1:2::AAECAwQFBgcICQoLE2elb6yLpSq/coCH+6wswH/VbxSMiBMtC7k
+```
+
+### 13.7 Self-describing shared-secret message with remap
+
+```text
+[pact]:v1:2:2B.2F!:AAECAwQFBgcICQoLE2elb6yLpSq!coCH.6wswH!VbxSMiBMtC7k
+```
+
 ## 14. Open Issues
 
 ### 14.1 Transport remap ambiguity
 
 Non-normative note:
 
-`transportData.charRemap` currently validates single-character mappings with unique destination values, but that alone does not guarantee unambiguous inversion.
+`transportData.charRemap` and compact preamble remaps validate single-character mappings with unique destination values, but that alone does not guarantee unambiguous inversion.
 
 Example:
 
@@ -416,4 +523,6 @@ Example:
 - a transport remap maps `/` to `+`
 - ciphertext that originally contained a literal `+` becomes ambiguous after inversion
 
-A future revision may tighten `charRemap` validation so destination characters must not collide with the native encoded alphabet of the selected profile.
+Compact preamble remap destinations SHOULD NOT collide with the native encoded alphabet of the selected profile unless the resulting mapping remains unambiguous under that profile.
+
+A future revision may tighten all `charRemap` validation so destination characters must not collide with the native encoded alphabet of the selected profile.

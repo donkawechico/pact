@@ -1,0 +1,6 @@
+{
+  "name": "missing-preamble-segment",
+  "message": "[pact]:v1:2:AAECAw",
+  "expectedErrorContains": "Self-describing message must contain four preamble delimiters",
+  "notes": "Invalid because the compact remap segment is missing."
+}

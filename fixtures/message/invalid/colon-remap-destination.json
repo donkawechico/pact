@@ -1,0 +1,6 @@
+{
+  "name": "colon-remap-destination",
+  "message": "[pact]:v1:2:2B::AAECAw",
+  "expectedErrorContains": "Compact remap spec length must be a multiple of 3",
+  "notes": "Invalid because ':' is reserved as the self-describing message segment delimiter, so attempting to use it as a remap destination terminates the remap segment early."
+}

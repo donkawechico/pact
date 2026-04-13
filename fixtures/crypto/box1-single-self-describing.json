@@ -1,0 +1,12 @@
+{
+  "name": "box1-single-self-describing",
+  "configString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoicGFjdDE6IiwicHJvZmlsZSI6InBhY3QtYm94MSIsInByb2ZpbGVEYXRhIjp7InJlY2lwaWVudHMiOlt7ImtleUlkIjoiYWxpY2UtbWFpbiIsInB1YmxpY0tleSI6IkI2Tjh2QlFnazhpM1Zkd2JFT2hzdENZM1N0RnFxRlB0QzlfQXNyaHRISHcifV19fQ",
+  "secret": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA",
+  "plaintext": "Hello Alice",
+  "ciphertext": "[pact]:v1:3::eyJwcm9maWxlIjoicGFjdC1ib3gxIiwiZXBoZW1lcmFsUHVibGljS2V5IjoiWkxFQnNkQy1Xb2NFdlFlUG1KVUFIOEEtanAtVkl2R0kzUktObUViVWhHWSIsInBheWxvYWRJdiI6IkFBRUNBd1FGQmdjSUNRb0wiLCJyZWNpcGllbnRzIjpbeyJrZXlJZCI6ImFsaWNlLW1haW4iLCJ3cmFwcGVkS2V5IjoiUDlrNVFGZEhBRXFUR1JqMm15bGNKMC00dDdtWk1iVmp3NUdWVW0yb3lLaW5YZG5lTWpoYUZXQkNXYUk1LXlUUiJ9XSwiY2lwaGVydGV4dCI6ImRvbWxHNUl5LTVtbkRTcnVLUnBlTW5RMWd5am1sX3BHT25pdCJ9",
+  "deterministicInputs": {
+    "payloadIvBase64Url": "AAECAwQFBgcICQoL",
+    "payloadKeyBase64Url": "oKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr8",
+    "ephemeralPrivateKeyBase64Url": "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpbXF1eX2A"
+  }
+}

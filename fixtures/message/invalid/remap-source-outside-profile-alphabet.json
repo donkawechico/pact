@@ -1,0 +1,6 @@
+{
+  "name": "remap-source-outside-profile-alphabet",
+  "message": "[pact]:v1:2:2D.:AAECAw",
+  "expectedErrorContains": "Remap source outside profile alphabet",
+  "notes": "Invalid because '-' is not part of the pact-psk2 standard Base64 encoded payload alphabet."
+}

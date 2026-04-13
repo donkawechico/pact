@@ -1,0 +1,6 @@
+{
+  "name": "unknown-profile-id",
+  "message": "[pact]:v1:9::AAECAw",
+  "expectedErrorContains": "Unknown profile ID: 9",
+  "notes": "Invalid because self-describing PACT v1 messages only define profile IDs 1, 2, and 3."
+}

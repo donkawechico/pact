@@ -15,3 +15,4 @@
 - Added deterministic crypto vectors for `pact-box1` single-recipient and multi-recipient envelopes.
 - Expanded the spec with canonical serialization and fixture guidance.
 - Clarified the intended split between the spec repo and implementation repos.
+- Added additive self-describing encrypted message preambles with compact profile IDs and compact character-remap encoding.

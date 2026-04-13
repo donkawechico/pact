@@ -1,0 +1,10 @@
+{
+  "name": "psk2-self-describing",
+  "configString": "pact:v1:eyJtZXNzYWdlUHJlZml4IjoiW0VOQ10iLCJwcm9maWxlIjoicGFjdC1wc2syIn0",
+  "secret": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+  "plaintext": "Testing123",
+  "ciphertext": "[pact]:v1:2::AAECAwQFBgcICQoLE2elb6yLpSq/coCH+6wswH/VbxSMiBMtC7k",
+  "deterministicInputs": {
+    "ivBase64Url": "AAECAwQFBgcICQoL"
+  }
+}
