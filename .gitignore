@@ -6,3 +6,6 @@ out/
 
 CLAUDE.md
 *.code-workspace
+
+*.pem
+*.zip
