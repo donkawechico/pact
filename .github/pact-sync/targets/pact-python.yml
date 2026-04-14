@@ -1,0 +1,15 @@
+name: pact-python
+enabled: true
+
+target_repo: donkawechico/pact-python
+target_workflow: sync-from-pact.yml
+
+watched_paths:
+  - SPEC.md
+  - fixtures/config/**
+  - fixtures/message/**
+  - fixtures/crypto/**
+
+handoff:
+  implementation: python
+  upstream_label: pact
