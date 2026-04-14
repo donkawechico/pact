@@ -1,0 +1,9 @@
+{
+  "name": "reserved-pact-message-prefix",
+  "json": {
+    "messagePrefix": "pact",
+    "profile": "pact-psk1"
+  },
+  "expectedErrorContains": "messagePrefix must not be pact",
+  "notes": "Invalid because [pact] is reserved for self-describing PACT messages."
+}
