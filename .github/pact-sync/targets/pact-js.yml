@@ -1,0 +1,15 @@
+name: pact-js
+enabled: true
+
+target_repo: donkawechico/pact-js
+target_workflow: sync-from-pact.yml
+
+watched_paths:
+  - SPEC.md
+  - fixtures/config/**
+  - fixtures/message/**
+  - fixtures/crypto/**
+
+handoff:
+  implementation: javascript
+  upstream_label: pact
