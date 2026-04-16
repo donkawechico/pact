@@ -172,7 +172,7 @@ The decoded JSON object MAY contain unknown fields. Unknown fields MUST be ignor
 - `messagePrefix`: string
 - `profile`: string enum
 
-`messagePrefix` is the application-chosen prefix token. Configs may choose any non-empty token that does not contain bracket characters. Config-bound encrypted messages serialize that token inside brackets before the profile-defined payload, for example `ENC` becomes `[ENC]`.
+`messagePrefix` is the application-chosen prefix token. Configs may choose any non-empty token that does not contain bracket characters and is not the literal value `pact`. Config-bound encrypted messages serialize that token inside brackets before the profile-defined payload, for example `ENC` becomes `[ENC]`.
 
 ### 5.2 Optional fields
 
@@ -391,6 +391,7 @@ Implementations MUST reject configs when:
 - required fields are of the wrong type
 - `messagePrefix` is empty
 - `messagePrefix` contains `[` or `]`
+- `messagePrefix` is the literal value `pact`
 - `profile` is unknown
 - `profileData` is present but is not an object
 - `transportData` is present but is not an object
